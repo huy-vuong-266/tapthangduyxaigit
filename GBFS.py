@@ -21,6 +21,7 @@ class Graph:
         visited = []
         visited.append(s)
         cl =[]
+        sh = 0
         for v, w in self.graph[s]:
            pq.update(item=v, priority=h[v])
            cl.append((s,v))
@@ -36,10 +37,11 @@ class Graph:
                 if  v not in visited:
                     cl.append((it,v))
                     pq.update(item=v, priority=h[v]+pri)
-        print(self.traceBack(s,g,cl))
-        print(visited)
+        th = self.traceBack(s,g,cl)
+        for f  in range(len(th)):
+               sh = sh + h[th[f]][0]
+        print(sh)
         pass
-
     def traceBack(self,s,g,cl):
         GBFSlist = []
         f,t = cl.pop(-1)

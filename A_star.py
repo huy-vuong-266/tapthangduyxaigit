@@ -1,4 +1,5 @@
 from collections import defaultdict
+from utils import *
 import heapq
 
 # define graph
@@ -15,9 +16,46 @@ class Graph:
 
     # function to be implemented
     def A_star(self, s, g, h):
-        '''
-        TODO: function to implement
-        '''
+        pq = PriorityQueue()
+        visited = []
+        visited.append(s)
+        cl =[]
+        for v, w in self.graph[s]:
+           pq.update(item=v, priority=h[v] + w)
+           cl.append((s,v))
+           
+        while not pq.isEmpty():
+            (pri, it) = pq.pop()
+
+            if it == g:
+                visited.append(it)
+                break
+            visited.append(it)
+            for v,w in self.graph[it]:
+                if  v not in visited:
+                    cl.append((it,v))
+                    pq.update(item=v, priority=h[v]+pri+w)
+        print(cl)
+        print(self.traceBack(s,g,cl))
+        print(visited)
+        pass
+
+    def traceBack(self,s,g,cl):
+        GBFSlist = []
+        f,t = cl.pop(-1)
+        GBFSlist.append(t)
+        GBFSlist.append(f)
+        while f != s:
+            f = self.findPreviousNode(f,cl)
+            GBFSlist.append(f)
+        return GBFSlist    
+            
+    def findPreviousNode(self,node,cl):
+        f,t = cl.pop(-1)
+        while t != node:
+            f,t = cl.pop(-1)
+        return f    
+        
     
 
 # Driver code

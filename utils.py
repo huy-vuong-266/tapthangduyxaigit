@@ -16,8 +16,8 @@ class PriorityQueue:
         heapq.heapify(self.pq)
         pass
     
-    def get(self):
-        return self.pq
+    def get(self,item,priority):
+        return self.pq(priority,item)
 
     def pop(self):
         if (len(self.pq)==0):
