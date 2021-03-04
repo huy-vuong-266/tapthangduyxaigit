@@ -40,7 +40,7 @@ class Graph:
         th = self.traceBack(s,g,cl)
         for f  in range(len(th)):
                sh = sh + h[th[f]][0]
-        print(sh)
+        return sh
         pass
     def traceBack(self,s,g,cl):
         GBFSlist = []
@@ -95,4 +95,7 @@ with open('input.txt', 'r') as f:
 
 
 
-print(g.GBFS(start, goal, heuristic))
+
+
+f = open("output.txt", "w")
+f.write(str(g.GBFS(start, goal, heuristic)))
