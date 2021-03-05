@@ -16,50 +16,54 @@ class Graph:
 
     # function to be implemented
     def A_star(self, s, g, h):
-        pq = PriorityQueue()
-        visited = []
-        visited.append(s)
-        cl =[]
-        sh = 0
-        for v, w in self.graph[s]:
-           pq.update(item=v, priority=h[v][0] + w)
-           cl.append((s,v))
-           
-        while not pq.isEmpty():
-            (pri, it) = pq.pop()
-
-            if it == g:
-                visited.append(it)
-                break
-            visited.append(it)
-            for v,w in self.graph[it]:
-                if  v not in visited:
-                    cl.append((it,v))
-                    pq.update(item=v, priority=h[v][0]+pri+w)
-        # th = self.traceBack(s,g,cl)
-        # print(th)
-        # for f  in range(len(th)):
-        #        sh = sh + h[th[f]][0]
-        print(visited)
+        openlist = []
+        closelist =[]
+        openlist.append(s)
+        np = {} #luu node di qua
+        np[s] = 0
+        gCost = {}
+        fCost = {}
+        gCost[s] = 0
+        fCost[s] = gCost[s] + h[s][0]
+        cpwh = []#cost path without heuristic
+        while len(openlist) != 0:
+            currentNode = self.getLowestNode(openlist,fCost)
+            if currentNode == g:
+                #return self.reconstructPath(np,g)
+                return cpwh[-1]
+            openlist.remove(currentNode)
+            closelist.append(currentNode)
+            for (i,v) in self.graph[currentNode]:
+                tc = gCost[currentNode] + v
+                if i not in closelist and i not in openlist:
+                    np[i] = currentNode
+                    gCost[i] = tc
+                    fCost[i] = gCost[i] + h[i][0]
+                    cpwh.append(tc)
+                    openlist.append(i)
+                else:
+                    if i in closelist:
+                        continue
+        return 0
+        #code tham khao tu` https://github.com/vandersonmr/A_Star_Algorithm/blob/master/libs/python/AStar.py
         pass
-
-    # def traceBack(self,s,g,cl):
-    #     GBFSlist = []
-    #     f,t = cl.pop(-1)
-    #     GBFSlist.append(t)
-    #     GBFSlist.append(f)
-    #     while f != s:
-    #         f = self.findPreviousNode(f,cl)
-    #         GBFSlist.append(f)
-    #     return GBFSlist    
-            
-    # def findPreviousNode(self,node,cl):
-    #     f,t = cl.pop(-1)
-    #     while t != node:
-    #         f,t = cl.pop(-1)
-    #     return f    
-        
+    def getLowestNode(self,open_list,h):
+        minHeuristic = h[open_list[0]]
+        lowestNode = None
+        for n in open_list:
+            if h[n] <= minHeuristic:
+                minHeuristic = h[n]
+                lowestNode = n
+        return lowestNode
     
+    def reconstructPath(self,cameFrom,goal):
+        path = []
+        Node = goal
+        path.appendleft(Node)
+        while n in cameFrom:
+            Node = cameFrom[Node]
+            path.appendleft(Node)
+        return
 
 # Driver code
 # Create a graph given in the above diagram
@@ -76,4 +80,6 @@ with open('input.txt', 'r') as f:
         heuristic.append(h)
     start, goal = [int(x) for x in next(f).split()]
 
-g.A_star(start, goal, heuristic)
+print(g.A_star(start, goal, heuristic))
+f = open("output.txt", "w")
+f.write(str(g.A_star(start, goal, heuristic)))
